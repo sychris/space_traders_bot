@@ -2,6 +2,7 @@ import requests
 import http.client
 import auth_token as auth
 import json
+import cli_commands as cc
 
 conn = http.client.HTTPSConnection("api.spacetraders.io")
 ver = "/v2/"
@@ -9,7 +10,27 @@ auth_token = {"Authorization": "Bearer " + auth.token}
 
 
 def main():
-    view_contracts()
+    cc.menu()
+
+
+def accept_contract(contract_id):
+    path = ver + "my/contracts/" + contract_id + "/accept"
+    print(post_request(path, auth_token))
+
+
+def post_request(path, header):
+    return send_request("POST", path, header)
+
+
+def get_request(path, header):
+    return send_request("GET", path, header)
+
+
+def send_request(type, path, header):
+    conn.request(type, path, headers=header)
+    res = conn.getresponse()
+    data = res.read()
+    return data.decode("utf-8")
 
 
 def system_from_waypoint(waypoint):
@@ -19,41 +40,27 @@ def system_from_waypoint(waypoint):
 
 
 def view_contracts():
-    headers = auth_token
     path = ver + "my/contracts"
-    conn.request("GET", path, headers=headers)
-    res = conn.getresponse()
-    data = res.read()
-    print(data.decode("utf-8"))
+    print(get_request(path, auth_token))
+
 
 # /systems/X1-QB20
 # X1-QB20-61050B
 def view_location(waypoint):
     sys = system_from_waypoint(waypoint)
-    headers = auth_token
     path = ver + "systems/" + sys + "/waypoints/" + waypoint
-    conn.request("GET", path, headers=headers)
-    res = conn.getresponse()
-    data = res.read()
-    # print(res)
-    # print(data)
-
-    # print(data.decode("utf-8"))
-
-    phase_waypoint(data)
+    phase_waypoint(get_request(path, auth_token))
 
 
 def view_agent():
-    path = base_url + '/my/agent'
-    print(path)
-    headers = auth_token
-    response = requests.get(path, headers=headers)
+    path = ver + "my/agent"
+    response = get_request(path, auth_token)
     phase_data(response)
 
 
 def phase_waypoint(waypoint_data):
     # print(phase_waypoint.Response == 200)
-    # print(waypoint_data)
+    #print(waypoint_data)
     phased = json.loads(waypoint_data)
     # print(phased["data"])
     print("systemSymbol: " + phased["data"]["systemSymbol"])
@@ -64,8 +71,6 @@ def phase_waypoint(waypoint_data):
     print("orbitals:")
     for orbital in phased["data"]["orbitals"]:
         print("\tsymbol: " + orbital["symbol"])
-    if "chart" in phased["data"]:
-        print("true")
     print("traits: ")
     for trait in phased["data"]["traits"]:
         print("\tsymbol: " + trait["symbol"])
