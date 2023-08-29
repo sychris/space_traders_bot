@@ -7,7 +7,7 @@ class GUI:
         self.gui_type = gui_type
 
     def show_main(self):
-        if self.gui_type == "cli":
+        if self.is_cli():
             cc.cli_menu(self)
 
     def show_location(self, waypoint):
@@ -17,7 +17,7 @@ class GUI:
 
     def show_contracts(self):
         data = si.get_contracts()
-        if self.gui_type == "cli":
+        if self.is_cli():
             cc.cli_print_contracts(data)
 
     def show_agent(self):
