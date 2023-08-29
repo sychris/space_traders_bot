@@ -9,8 +9,7 @@ auth_token = {"Authorization": "Bearer " + auth.token}
 
 
 def main():
-    system_from_waypoint("X1-QB20-61050B")
-    view_location("X1-QB20-61050B")
+    view_contracts()
 
 
 def system_from_waypoint(waypoint):
@@ -18,6 +17,14 @@ def system_from_waypoint(waypoint):
     system = x[0] + "-" + x[1]
     return system
 
+
+def view_contracts():
+    headers = auth_token
+    path = ver + "my/contracts"
+    conn.request("GET", path, headers=headers)
+    res = conn.getresponse()
+    data = res.read()
+    print(data.decode("utf-8"))
 
 # /systems/X1-QB20
 # X1-QB20-61050B
@@ -78,23 +85,30 @@ def phase_data(data):
     print(phased["data"])
 
 
-def create_token():
-    file_path = "auth_token.txt"
-    my_json = {"symbol": "Sychris_test2", "faction": "COSMIC"}
-    headers = {"Content-Type": "application/json"}
-    response = requests.post("https://api.spacetraders.io/v2/register", headers=headers, json=my_json)
-    print(response.content)
-    phased = json.loads(response.content)
-    t = phased["data"]["token"]
-    print(t)
-    write_token(t)
+def create_token(my_user, my_faction):
+    if auth.token != "":
+        print("user already generated clear existing token to make anew!")
+        exit()
+    payload = "{\n  \"faction\": \"" + my_faction + "\",\n  \"symbol\": \"" + my_user + "\"}"
+    headers = {
+        'Content-Type': "application/json",
+        'Accept': "application/json"
+    }
+    conn.request("POST", ver + "register", payload, headers)
+    res = conn.getresponse()
+    data = res.read()
+    phased = json.loads(data)
 
-
-def write_token(token):
-    file_path = "auth_token.py"
-    with open(file_path, "w") as file:
-        file.write(token)
-    print(f"Token generated in {file_path}")
+    if "error" in phased:
+        print("error" + str(phased["error"]))
+    else:
+        print("success")
+        token = "token = \"" + phased["data"]["token"] + "\""
+        print(phased["data"]["token"])
+        file_path = "auth_token.py"
+        with open(file_path, "w") as file:
+            file.write(token)
+        print(f"Token generated in {file_path}")
 
 
 # Press the green button in the gutter to run the script.
