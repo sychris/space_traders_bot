@@ -1,6 +1,5 @@
 import requests
 import http.client
-import json
 import auth_token as auth
 import json
 
@@ -19,21 +18,23 @@ def system_from_waypoint(waypoint):
     system = x[0] + "-" + x[1]
     return system
 
-#/systems/X1-QB20
-#X1-QB20-61050B
+
+# /systems/X1-QB20
+# X1-QB20-61050B
 def view_location(waypoint):
     sys = system_from_waypoint(waypoint)
     headers = auth_token
-    path = ver + "systems/" + sys + "/waypoints/"+ waypoint
-    conn.request("GET", path , headers=headers)
+    path = ver + "systems/" + sys + "/waypoints/" + waypoint
+    conn.request("GET", path, headers=headers)
     res = conn.getresponse()
     data = res.read()
-    #print(res)
-    #print(data)
+    # print(res)
+    # print(data)
 
-    #print(data.decode("utf-8"))
+    # print(data.decode("utf-8"))
 
     phase_waypoint(data)
+
 
 def view_agent():
     path = base_url + '/my/agent'
@@ -42,11 +43,12 @@ def view_agent():
     response = requests.get(path, headers=headers)
     phase_data(response)
 
+
 def phase_waypoint(waypoint_data):
-    #print(phase_waypoint.Response == 200)
-    #print(waypoint_data)
+    # print(phase_waypoint.Response == 200)
+    # print(waypoint_data)
     phased = json.loads(waypoint_data)
-    #print(phased["data"])
+    # print(phased["data"])
     print("systemSymbol: " + phased["data"]["systemSymbol"])
     print("symbol: " + phased["data"]["symbol"])
     print("type: " + phased["data"]["type"])
@@ -65,19 +67,20 @@ def phase_waypoint(waypoint_data):
     if "chart" in phased["data"]:
         print("chart: ")
         for d in phased["data"]["chart"]:
-            print("\t" + d + ": " +phased["data"]["chart"][d])
+            print("\t" + d + ": " + phased["data"]["chart"][d])
     if "faction" in phased["data"]:
         print("faction: " + phased["data"]["faction"]["symbol"])
 
+
 def phase_data(data):
-    #print(data.content)
+    # print(data.content)
     phased = json.loads(data.content)
     print(phased["data"])
 
 
 def create_token():
     file_path = "auth_token.txt"
-    my_json = { "symbol": "Sychris_test2", "faction": "COSMIC" }
+    my_json = {"symbol": "Sychris_test2", "faction": "COSMIC"}
     headers = {"Content-Type": "application/json"}
     response = requests.post("https://api.spacetraders.io/v2/register", headers=headers, json=my_json)
     print(response.content)
