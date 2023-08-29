@@ -18,7 +18,7 @@ class GUI:
     def show_contracts(self):
         data = si.get_contracts()
         if self.is_cli():
-            cc.cli_print_contracts(data)
+            cc.cli_show_contracts(data)
 
     def show_agent(self):
         data = si.get_agent()

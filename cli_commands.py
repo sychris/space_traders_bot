@@ -48,6 +48,10 @@ def cli_show_waypoint(waypoint_data):
         print("faction: " + phased["data"]["faction"]["symbol"])
 
 
+def cli_show_contracts(data):
+    print(data)
+
+
 def cli_print_waypoint(data):
     return None
 
