@@ -1,2 +1,3 @@
 api https://spacetraders.stoplight.io/docs/spacetraders/58e66f2fa8c82-get-waypoint
 docs https://docs.spacetraders.io/quickstart/first-mission
+server_status https://api.spacetraders.io/v2
