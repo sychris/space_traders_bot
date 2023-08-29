@@ -1,4 +1,5 @@
 import json
+import settings
 
 
 def cli_menu(gui):
@@ -9,17 +10,27 @@ def cli_menu(gui):
         match my_input:
             case "hi":
                 print("hello")
-            case "view_contracts":
+            case "contracts":
                 gui.show_contracts()
-            case "view_location":
+            case "location":
                 gui.show_location("X1-QB20-61050B")
-            case "view_agent":
+            case "agent":
                 gui.show_agent()
             case "exit":
                 run = False
+            case "check_auth":
+                gui.show_check_auth()
+            case "show_auth":
+                print(settings.auth_token)
+            case "create_token":
+                gui.create_token("sychris", "COSMIC")
 
             case _:
                 print("unknown command")
+
+
+def get_input(msg):
+    return input(msg)
 
 
 def cli_show_waypoint(waypoint_data):
@@ -58,3 +69,18 @@ def cli_print_waypoint(data):
 
 def cli_show_agent(data):
     print(data)
+
+
+def cli_show_check_auth(exists):
+    if exists:
+        print("auth token appears to exist")
+    else:
+        print("auth token not found")
+
+
+def show_error(msg):
+    print("Error: " + msg)
+
+
+def show_msg(msg):
+    print("Message: " + msg)

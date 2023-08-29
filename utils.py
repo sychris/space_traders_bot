@@ -1,5 +1,6 @@
 import json
 import settings
+import auth_token as auth
 
 
 def system_from_waypoint(waypoint):
@@ -15,7 +16,7 @@ def phase_data(data):
 
 
 def check_auth_exists():
-    if settings.auth_token != "{'Authorization': 'Bearer }":
+    if auth.token == "":
         return False
     else:
         return True

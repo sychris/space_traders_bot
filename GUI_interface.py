@@ -1,5 +1,6 @@
 import cli_commands as cc
 import server_interface as si
+import utils
 
 
 class GUI:
@@ -25,7 +26,21 @@ class GUI:
         if self.is_cli():
             cc.cli_show_agent(data)
 
+    def show_check_auth(self):
+        if self.is_cli():
+            cc.cli_show_check_auth(utils.check_auth_exists())
 
+    def create_token(self, user, faction):
+        if self.is_cli():
+            si.create_token(user, faction, self)
+
+    def show_error(self, msg):
+        if self.is_cli():
+            cc.show_error(msg)
+
+    def show_msg(self, msg):
+        if self.is_cli():
+            cc.show_msg(msg)
 
     def is_cli(self):
         return True if self.gui_type == "cli" else False

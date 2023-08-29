@@ -1,7 +1,8 @@
+import json
+
 import utils
 import settings
 import http.client
-
 
 conn = http.client.HTTPSConnection("api.spacetraders.io")
 
@@ -16,16 +17,22 @@ def get_agent():
     return get_request(path, settings.auth_token)
 
 
-def post_request(path, header):
-    return send_request("POST", path, header)
+def post_request(path: str, header: dict, payload: str = None):
+    print(type(header))
+    return send_request("POST", path, header, payload)
 
 
 def get_request(path, header):
     return send_request("GET", path, header)
 
 
-def send_request(send_type, path, header):
-    conn.request(send_type, path, headers=header)
+def send_request(send_type: str, path: str, header: dict, payload: str = None):
+    if payload is None:
+        conn.request(send_type, path, headers=header)
+    else:
+        print(type(header))
+        print(header)
+        conn.request(send_type, path, payload, headers=header)
     res = conn.getresponse()
     data = res.read()
     return data.decode("utf-8")
@@ -36,30 +43,25 @@ def accept_contract(contract_id):
     print(post_request(path, settings.auth_token))
 
 
-def create_token(my_user, my_faction):
-    if auth.token != "":
-        print("user already generated clear existing token to make anew!")
+def create_token(my_user, my_faction, gui):
+    if utils.check_auth_exists():
+        gui.show_error("user already generated clear existing token to make anew!")
         exit()
     payload = "{\n  \"faction\": \"" + my_faction + "\",\n  \"symbol\": \"" + my_user + "\"}"
-    headers = {
-        'Content-Type': "application/json",
-        'Accept': "application/json"
-    }
-    conn.request("POST", settings.ver + "register", payload, headers)
-    res = conn.getresponse()
-    data = res.read()
+    headers = {'Content-Type': 'application/json'}
+    print(type(headers))
+    data = post_request(settings.ver + "register", headers, payload)
     phased = json.loads(data)
-
     if "error" in phased:
-        print("error" + str(phased["error"]))
+        gui.show_error(str(phased["error"]))
     else:
-        print("success")
+        gui.show_msg("success")
         token = "token = \"" + phased["data"]["token"] + "\""
-        print(phased["data"]["token"])
+        gui.show_msg(phased["data"]["token"])
         file_path = "auth_token.py"
         with open(file_path, "w") as file:
             file.write(token)
-        print(f"Token generated in {file_path}")
+        gui.show_msg(f"Token generated in {file_path}")
 
 
 def get_waypoint(waypoint):
