@@ -18,7 +18,6 @@ def get_agent():
 
 
 def post_request(path: str, header: dict, payload: str = None):
-    print(type(header))
     return send_request("POST", path, header, payload)
 
 
@@ -30,8 +29,6 @@ def send_request(send_type: str, path: str, header: dict, payload: str = None):
     if payload is None:
         conn.request(send_type, path, headers=header)
     else:
-        print(type(header))
-        print(header)
         conn.request(send_type, path, payload, headers=header)
     res = conn.getresponse()
     data = res.read()
@@ -67,4 +64,29 @@ def create_token(my_user, my_faction, gui):
 def get_waypoint(waypoint):
     sys = utils.system_from_waypoint(waypoint)
     path = settings.ver + "systems/" + sys + "/waypoints/" + waypoint
+    return get_request(path, settings.auth_token)
+
+
+def view_shipyard(waypoint):
+    sys = utils.system_from_waypoint(waypoint)
+    path = settings.ver + "systems/" + sys + "/waypoints/" + waypoint + "/shipyard"
+    return get_request(path, settings.auth_token)
+
+
+def get_system(system):
+    path = settings.ver + "systems/" + system
+    return get_request(path, settings.auth_token)
+
+
+def buy_ship(waypoint, ship_symbol):
+    path = settings.ver + "my/ships"
+    payload = '{"shipType": "' + ship_symbol + '", "waypointSymbol": "' + waypoint + '"}'
+    headers = {'Content-Type': 'application/json'}
+    headers.update(settings.auth_token)
+    print(payload)
+    return post_request(path, headers,payload)
+
+
+def get_ships():
+    path = settings.ver + "my/ships"
     return get_request(path, settings.auth_token)

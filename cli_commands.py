@@ -12,8 +12,10 @@ def cli_menu(gui):
                 print("hello")
             case "contracts":
                 gui.show_contracts()
-            case "location":
-                gui.show_location("X1-QB20-61050B")
+            case "view_waypoint":
+                gui.show_waypoint(get_input("waypoint to view: "))
+            case "view_system":
+                gui.show_system(get_input("system to view: "))
             case "agent":
                 gui.show_agent()
             case "exit":
@@ -24,7 +26,12 @@ def cli_menu(gui):
                 print(settings.auth_token)
             case "create_token":
                 gui.create_token("sychris", "COSMIC")
-
+            case "view_shipyard":
+                gui.view_shipyard(get_input("waypoint to view: "))
+            case "buy_ship":
+                gui.buy_ship(get_input("waypoint: "),get_input("ship symbol: "))
+            case "view_ships":
+                gui.view_ships()
             case _:
                 print("unknown command")
 
@@ -84,3 +91,15 @@ def show_error(msg):
 
 def show_msg(msg):
     print("Message: " + msg)
+
+
+def show_shipyard(data):
+    print(data)
+
+
+def cli_show_system(data):
+    print(data)
+
+
+def view_ships(data):
+    print(data)

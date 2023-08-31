@@ -11,11 +11,24 @@ class GUI:
         if self.is_cli():
             cc.cli_menu(self)
 
-    def show_location(self, waypoint):
+    def show_waypoint(self, waypoint):
         data = si.get_waypoint(waypoint)
         if self.is_cli():
             cc.cli_show_waypoint(data)
+    def show_system(self, system):
+        data = si.get_system(system)
+        if self.is_cli():
+            cc.cli_show_system(data)
 
+    def buy_ship(self, waypoint, ship_symbol):
+        data = si.buy_ship(waypoint, ship_symbol)
+        if self.is_cli():
+            cc.show_msg(data)
+
+    def view_ships(self):
+        data = si.get_ships()
+        if self.is_cli():
+            cc.view_ships(data)
     def show_contracts(self):
         data = si.get_contracts()
         if self.is_cli():
@@ -41,6 +54,11 @@ class GUI:
     def show_msg(self, msg):
         if self.is_cli():
             cc.show_msg(msg)
+
+    def view_shipyard(self, waypoint):
+        data = si.view_shipyard(waypoint)
+        if self.is_cli():
+            cc.show_shipyard(data)
 
     def is_cli(self):
         return True if self.gui_type == "cli" else False
