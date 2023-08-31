@@ -40,7 +40,7 @@ def accept_contract(contract_id):
     print(post_request(path, settings.auth_token))
 
 
-def create_token(my_user, my_faction, gui):
+def create_token(gui, my_user, my_faction):
     if utils.check_auth_exists():
         gui.show_error("user already generated clear existing token to make anew!")
         exit()
@@ -67,10 +67,10 @@ def get_waypoint(waypoint):
     return get_request(path, settings.auth_token)
 
 
-def view_shipyard(waypoint):
+def view_shipyard(gui, waypoint):
     sys = utils.system_from_waypoint(waypoint)
     path = settings.ver + "systems/" + sys + "/waypoints/" + waypoint + "/shipyard"
-    return get_request(path, settings.auth_token)
+    gui.show_msg(get_request(path, settings.auth_token),"view_shipyard")
 
 
 def get_system(system):
@@ -86,7 +86,44 @@ def buy_ship(waypoint, ship_symbol):
     print(payload)
     return post_request(path, headers,payload)
 
+def get_cooldown(gui,ship_id):
+    path = settings.ver + "my/ships/" + ship_id + "/cooldown"
+    gui.show_msg(get_request(path, settings.auth_token), "get_cooldown")
 
-def get_ships():
+def get_ships(gui):
     path = settings.ver + "my/ships"
-    return get_request(path, settings.auth_token)
+    gui.show_msg(get_request(path, settings.auth_token), "view_ships")
+
+
+def get_ship(gui, ship_id):
+    path = settings.ver + "my/ships/" + ship_id
+    gui.show_msg( get_request(path, settings.auth_token), "get_ship")
+
+
+def orbit_ship(ship_id):
+    path = settings.ver + "my/ships/" + ship_id + "/orbit"
+    return post_request(path, settings.auth_token)
+
+
+def navigate_ship(gui, ship_id, waypoint):
+    path = settings.ver + "my/ships/" + ship_id + "/navigate"
+    payload = '{"waypointSymbol": "' + waypoint + '"}'
+    headers = {'Content-Type': 'application/json'}
+    headers.update(settings.auth_token)
+    gui.show_msg(post_request(path,headers,payload))
+    return  post_request(path,headers,payload)
+
+
+def dock_ship(gui, ship_id):
+    path = settings.ver + "my/ships/" + ship_id + "/dock"
+    gui.show_msg(post_request(path, settings.auth_token),"dock_ship")
+
+
+def refuel_ship(gui, ship_id):
+    path = settings.ver + "my/ships/" + ship_id + "/refuel"
+    gui.show_msg(post_request(path, settings.auth_token), "refuel_ship")
+
+
+def extract(gui, ship_id):
+    path = settings.ver + "my/ships/" + ship_id + "/extract"
+    gui.show_msg(post_request(path, settings.auth_token), "extract")

@@ -12,53 +12,63 @@ class GUI:
             cc.cli_menu(self)
 
     def show_waypoint(self, waypoint):
-        data = si.get_waypoint(waypoint)
         if self.is_cli():
-            cc.cli_show_waypoint(data)
+            cc.show_waypoint(si.get_waypoint(waypoint))
     def show_system(self, system):
-        data = si.get_system(system)
         if self.is_cli():
-            cc.cli_show_system(data)
+            cc.show_system(si.get_system(system))
 
     def buy_ship(self, waypoint, ship_symbol):
-        data = si.buy_ship(waypoint, ship_symbol)
         if self.is_cli():
-            cc.show_msg(data)
+            cc.show_msg(si.buy_ship(waypoint, ship_symbol))
 
     def view_ships(self):
-        data = si.get_ships()
-        if self.is_cli():
-            cc.view_ships(data)
-    def show_contracts(self):
-        data = si.get_contracts()
-        if self.is_cli():
-            cc.cli_show_contracts(data)
+        si.get_ships(self)
 
-    def show_agent(self):
-        data = si.get_agent()
+    def refuel_ship(self, ship_id):
+        si.refuel_ship(self, ship_id)
+
+    def orbit_ship(self, ship_id):
         if self.is_cli():
-            cc.cli_show_agent(data)
+            cc.show_msg(si.orbit_ship(ship_id))
+    def view_ship(self, ship_id):
+        si.get_ship(self, ship_id)
+    def show_contracts(self):
+        if self.is_cli():
+            cc.show_contracts(si.get_contracts())
+    def cooldown(self,ship_id):
+        si.get_cooldown(self,ship_id)
+    def show_agent(self):
+        if self.is_cli():
+            cc.show_agent(si.get_agent())
 
     def show_check_auth(self):
         if self.is_cli():
-            cc.cli_show_check_auth(utils.check_auth_exists())
+            cc.show_check_auth(utils.check_auth_exists())
 
     def create_token(self, user, faction):
-        if self.is_cli():
-            si.create_token(user, faction, self)
+        si.create_token(self, user, faction)
 
     def show_error(self, msg):
         if self.is_cli():
             cc.show_error(msg)
 
-    def show_msg(self, msg):
+    def dock_ship(self, ship_id):
+        si.dock_ship(self, ship_id)
+
+    def show_msg(self, msg, msg_type = "standard"):
         if self.is_cli():
-            cc.show_msg(msg)
+            cc.show_msg(msg, msg_type)
 
     def view_shipyard(self, waypoint):
-        data = si.view_shipyard(waypoint)
         if self.is_cli():
-            cc.show_shipyard(data)
+            cc.show_shipyard(si.view_shipyard(self, waypoint))
+
+    def navigate_ship(self,ship_id, waypoint):
+        si.navigate_ship(self, ship_id,waypoint)
+
+    def extract(self, ship_id):
+        si.extract(self, ship_id)
 
     def is_cli(self):
         return True if self.gui_type == "cli" else False
